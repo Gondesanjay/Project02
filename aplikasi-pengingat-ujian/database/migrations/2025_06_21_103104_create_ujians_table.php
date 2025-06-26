@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('ujians', function (Blueprint $table) {
             $table->id();
-            
-            // Ini adalah kolom kunci untuk relasi
-            $table->foreignId('mata_pelajaran_id')
-                  ->constrained('mata_pelajarans') // Terhubung ke tabel mata_pelajarans
-                  ->onDelete('cascade'); // Jika mata pelajaran dihapus, ujian terkait juga terhapus
 
+            // Kolom relasi (foreign keys)
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('mata_pelajaran_id')->constrained('mata_pelajarans')->cascadeOnDelete();
+
+            // Kolom untuk data utama
             $table->string('nama_ujian'); // Contoh: "Ujian Tengah Semester", "Kuis 2"
             $table->dateTime('tanggal_ujian'); // Tanggal dan waktu ujian
             $table->text('catatan')->nullable(); // Catatan tambahan, boleh kosong
+
             $table->timestamps();
         });
     }

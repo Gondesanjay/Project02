@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UserScope; // Import UserScope
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,18 +13,32 @@ class TipsBelajar extends Model
 
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'judul',
         'konten',
-        'mata_pelajaran_id', // Foreign key untuk relasi
+        'mata_pelajaran_id',
     ];
 
     /**
-     * Mendefinisikan relasi ke model MataPelajaran.
-     * Satu 'Tips Belajar' dimiliki oleh satu (Belongs To) 'Mata Pelajaran'.
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new UserScope);
+    }
+
+    /**
+     * Relasi ke model User (pemilik data).
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relasi ke model MataPelajaran.
      */
     public function mataPelajaran(): BelongsTo
     {

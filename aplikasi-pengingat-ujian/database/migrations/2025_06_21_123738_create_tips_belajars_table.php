@@ -13,11 +13,17 @@ return new class extends Migration
     {
         Schema::create('tips_belajars', function (Blueprint $table) {
             $table->id();
+
+            // Kolom untuk data utama
             $table->string('judul');
             $table->longText('konten');
-            
-            // Kolom relasi ke mata pelajaran, boleh kosong (nullable)
-            // Karena mungkin ada tips yang bersifat umum
+
+            // Kolom untuk relasi (foreign keys)
+            // Relasi ke tabel users (siapa yang membuat tips ini)
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+
+            // Relasi ke mata pelajaran, boleh kosong (nullable)
+            // karena mungkin ada tips yang bersifat umum
             $table->foreignId('mata_pelajaran_id')->nullable()->constrained('mata_pelajarans')->onDelete('set null');
 
             $table->timestamps();

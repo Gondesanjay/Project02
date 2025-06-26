@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UserScope; // Import UserScope
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,35 +13,47 @@ class Ujian extends Model
 
     /**
      * The attributes that are mass assignable.
-     * Atribut yang boleh diisi secara massal melalui form.
-     *
-     * @var array<int, string>
      */
     protected $fillable = [
         'mata_pelajaran_id',
         'nama_ujian',
         'tanggal_ujian',
         'catatan',
+        'lokasi',
+        'user_id',
         'is_selesai',
     ];
 
     /**
      * The attributes that should be cast to native types.
-     * Mengubah tipe data atribut secara otomatis.
-     *
-     * @var array<string, string>
      */
     protected $casts = [
         'tanggal_ujian' => 'datetime',
-        'is_selesai' => 'boolean', // Ini adalah perbaikan untuk error 'diffForHumans()'
+        'is_selesai' => 'boolean',
     ];
 
     /**
-     * Mendefinisikan relasi ke model MataPelajaran.
-     * Satu Ujian dimiliki oleh (Belongs To) satu MataPelajaran.
+     * The "booted" method of the model.
+     * Menerapkan Global Scope untuk memfilter data berdasarkan user yang login.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new UserScope);
+    }
+
+    /**
+     * Relasi ke model MataPelajaran.
      */
     public function mataPelajaran(): BelongsTo
     {
         return $this->belongsTo(MataPelajaran::class);
+    }
+
+    /**
+     * Relasi ke model User (pemilik data).
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

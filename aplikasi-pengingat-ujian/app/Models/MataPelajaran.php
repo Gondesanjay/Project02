@@ -2,35 +2,54 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\UserScope; // Import UserScope
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany; // Kita perlu ini untuk relasi
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MataPelajaran extends Model
 {
     use HasFactory;
 
     /**
-     * Properti $fillable untuk mengizinkan Mass Assignment.
-     * Ini WAJIB ada agar form create/edit bisa berfungsi.
+     * The attributes that are mass assignable.
      */
     protected $fillable = [
         'nama_mapel',
         'nama_dosen',
         'materi_path',
+        'user_id',
     ];
 
     /**
-     * Mendefinisikan relasi ke model Ujian.
-     * Satu MataPelajaran bisa memiliki banyak Ujian.
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new UserScope);
+    }
+
+    /**
+     * Relasi ke model User (pemilik data).
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Relasi ke model Ujian.
      */
     public function ujians(): HasMany
     {
-        // Pastikan Anda sudah memiliki model Ujian di app/Models/Ujian.php
         return $this->hasMany(Ujian::class);
     }
 
-    public function tipsBelajar(): HasMany
+    /**
+     * Relasi ke model TipsBelajar.
+     */
+    public function tipsBelajars(): HasMany
     {
         return $this->hasMany(TipsBelajar::class);
     }

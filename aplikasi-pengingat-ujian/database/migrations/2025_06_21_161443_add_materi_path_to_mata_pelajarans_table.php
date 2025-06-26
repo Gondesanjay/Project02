@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('mata_pelajarans', function (Blueprint $table) {
-        // Menambahkan kolom baru untuk menyimpan path file materi
-        // nullable() berarti kolom ini boleh kosong (tidak semua mapel wajib punya materi)
-        $table->string('materi_path')->nullable()->after('nama_dosen');
-        });
+        // DIKOSONGKAN
+        // Logika ini sudah dipindahkan ke dalam file ...create_mata_pelajarans_table.php
+        // agar definisi tabel terpusat dan rapi.
     }
 
     /**
@@ -23,8 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('mata_pelajarans', function (Blueprint $table) {
-            //
-        });
+        // JUGA DIKOSONGKAN
     }
 };

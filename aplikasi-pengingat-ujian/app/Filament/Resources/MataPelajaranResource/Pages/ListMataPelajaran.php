@@ -6,7 +6,7 @@ use App\Filament\Resources\MataPelajaranResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListMataPelajarans extends ListRecords
+class ListMataPelajaran extends ListRecords
 {
     protected static string $resource = MataPelajaranResource::class;
 

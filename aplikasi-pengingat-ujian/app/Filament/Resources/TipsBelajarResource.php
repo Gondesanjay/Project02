@@ -23,17 +23,21 @@ class TipsBelajarResource extends Resource
     {
         return $form
             ->schema([
+                // INILAH POLA SOLUSI KITA!
+                Forms\Components\Hidden::make('user_id')
+                    ->default(auth()->id()),
+
                 Forms\Components\TextInput::make('judul')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
-                
-                // Dropdown untuk memilih mata pelajaran, tidak wajib diisi
+
+                // Dropdown untuk memilih Mata Pelajaran (opsional)
                 Forms\Components\Select::make('mata_pelajaran_id')
                     ->relationship('mataPelajaran', 'nama_mapel')
                     ->searchable()
                     ->preload(),
-                
+
                 Forms\Components\RichEditor::make('konten')
                     ->required()
                     ->columnSpanFull(),
@@ -45,18 +49,12 @@ class TipsBelajarResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('judul')
-                    ->searchable()
-                    ->limit(50),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('mataPelajaran.nama_mapel')
-                    ->label('Terkait Mata Pelajaran')
-                    ->badge() // Tampilkan sebagai badge/label
-                    ->default('Umum') // Tampilkan 'Umum' jika tidak ada relasi
-                    ->sortable(),
+                    ->label('Mata Pelajaran Terkait')
+                    ->badge()
+                    ->default('Umum'), // Tampilkan 'Umum' jika tidak ada mata pelajaran
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -66,7 +64,6 @@ class TipsBelajarResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(), 
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
